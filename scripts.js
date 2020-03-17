@@ -8,7 +8,7 @@ function clearCanvas() {
 }
 
 function getRandomNr(bottomLimit, upperLimit) {
-    return Math.floor(Math.random() * upperLimit) + bottomLimit;
+    return Math.floor(Math.random() * (upperLimit - bottomLimit + 1)) + bottomLimit;
 }
 
 function getRandomRGB() {
@@ -19,12 +19,16 @@ function getRandomRGB() {
 }
 
 function Circle() {
-    this.x = getRandomNr(1, 500);
-    this.y = getRandomNr(1, 300);
+    const radius = {
+        lowest: 10,
+        highest: 30
+    }
+    this.x = getRandomNr(1 + radius.highest, canvasWidth - radius.highest);
+    this.y = getRandomNr(1 + radius.highest, canvasHeight - radius.highest);
     this.velX = getRandomNr(-5, 5);
     this.velY = getRandomNr(-5, 5);
     this.color = getRandomRGB();
-    this.radius = getRandomNr(10, 30);
+    this.radius = getRandomNr(radius.lowest, radius.highest);
 }
 
 Circle.prototype.draw = function() {
