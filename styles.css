@@ -10,8 +10,12 @@
 }
 
 #container {
-    background: #000;
-    width: 50vw;
-    height: 50vh;
+    background: gray;
+    width: 500px;
+    height: 300px;
     margin: 0 auto;
+}
+
+#my-canvas {
+    border: 1px solid #000;
 }
