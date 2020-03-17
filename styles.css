@@ -1,0 +1,17 @@
+#controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    margin-bottom: 100px;
+}
+
+#controls input {
+    margin-right: 12px;
+}
+
+#container {
+    background: #000;
+    width: 50vw;
+    height: 50vh;
+    margin: 0 auto;
+}
