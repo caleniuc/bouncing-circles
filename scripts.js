@@ -1,52 +1,82 @@
-function getCtx() {
-    const c = document.getElementById("my-canvas");
-    return c.getContext("2d");
-}
-
-const ctx = getCtx();
+const canvas = document.getElementById("my-canvas");;
+const ctx = canvas.getContext("2d");
+const canvasWidth = canvas.width;
+const canvasHeight = canvas.height;
 
 function clearCanvas() {
-    const c = document.getElementById("my-canvas")
-    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 }
 
-function Ball() {
-    this.x = getRandom(1, 500);
-    this.y = getRandom(1, 300);
-    this.velX = getRandom(0, 10);
-    this.velY = getRandom(0, 10);
+function getRandomNr(bottomLimit, upperLimit) {
+    return Math.floor(Math.random() * upperLimit) + bottomLimit;
+}
+
+function getRandomRGB() {
+  const r = getRandomNr(0, 256);
+  const g = getRandomNr(0, 256);
+  const b = getRandomNr(0, 256);
+  return "rgb(" + r + "," + g + "," + b + ")";
+}
+
+function Circle() {
+    this.x = getRandomNr(1, 500);
+    this.y = getRandomNr(1, 300);
+    this.velX = getRandomNr(-5, 5);
+    this.velY = getRandomNr(-5, 5);
     this.color = getRandomRGB();
-    this.radius = getRandom(10, 30);
+    this.radius = getRandomNr(10, 30);
 }
 
-Ball.prototype.draw = function() {
+Circle.prototype.draw = function() {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
     ctx.fillStyle = this.color;
     ctx.fill();
 }
 
-function getRandom(bottomLimit, upperLimit) {
-    return Math.floor(Math.random() * upperLimit) + bottomLimit;
+Circle.prototype.update = function() {
+    this.x += this.velX;
+    this.y += this.velY;
+
+    // check if the circle will collide with left and right walls
+    if ((this.x + this.velX + this.radius > canvasWidth) || this.x + this.velX < this.radius) {
+        this.velX = -this.velX;
+    }
+
+    // check if the circle will collide with top and bottom walls
+    if ((this.y + this.velY + this.radius > canvasHeight) || this.y + this.velY < this.radius) {
+        this.velY = -this.velY;
+    }
 }
 
-function getRandomRGB() {
-  const r = getRandom(0, 256);
-  const g = getRandom(0, 256);
-  const b = getRandom(0, 256);
-  return "rgb(" + r + "," + g + "," + b + ")";
-}
+let circles = [];
+let interval;
 
 function spawnCircles() {
     clearCanvas();
+    circles = [];
+    if (interval) {
+        clearInterval(interval);
+    }
+
     const input = document.getElementById('circles-nr');
     const nrOfCircles = input.value;
+
     let i = 0;
     while(i < nrOfCircles) {
-        const ball = new Ball();
-        ball.draw();
+        const circle = new Circle();
+        circle.draw();
+        circles.push(circle);
         i++;
     }
+
+    interval = setInterval(() => {
+        clearCanvas();
+        circles.forEach(c => {
+            c.update();
+            c.draw();
+        })
+    }, 10);
 }
 
 const spawnBtn = document.getElementById('spawn-btn');
